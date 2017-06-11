@@ -52,7 +52,9 @@ namespace cc_shadowplay {
             tb_before_path.Text = file_name;
             tb_filename.Text = Path.GetFileNameWithoutExtension(file_name) + "_clipped" + Path.GetExtension(file_name);
             tb_end_time.Text = TimeSpan.FromSeconds(video_size_sec).ToString();
-            label_process_fin.Visible = false;
+            label_process_fin_clip.Visible = false;
+            progbar_clip.Visible = false;
+            progbar_clip.Style = ProgressBarStyle.Blocks;
         }
 
         private void btn_save_dir_Click(object sender, EventArgs e) {
@@ -66,7 +68,8 @@ namespace cc_shadowplay {
         }
 
         private void btn_process_Click(object sender, EventArgs e) {
-            label_process_fin.Visible = false;
+            label_process_fin_clip.Visible = false;
+            progbar_clip.Visible = false;
 
             string ffmpeg = Path.Combine(
                 System.IO.Directory.GetCurrentDirectory(),
@@ -132,22 +135,9 @@ namespace cc_shadowplay {
 
             // ffmpeg
             // ffmpeg -ss %3 -i %1 -t %40 -acodec copy -vcodec copy %2
-            using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
-                p.StartInfo.FileName = ffmpeg;
-                p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
-                Console.WriteLine(p.StartInfo.Arguments);
-                p.StartInfo.UseShellExecute = false;
-                //p.StartInfo.CreateNoWindow = true;
-                p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
-                p.Start();
+            this.ProcessClipAsync(ffmpeg, start_time, before_file, cut_time_sec, after_file);
 
-                p.WaitForExit();
-            }
-            
-            // 音を流す
-            Tools.PlaySound();
 
-            label_process_fin.Visible = true;
         }
 
         private void btn_preview_Click(object sender, EventArgs e) {
@@ -158,6 +148,30 @@ namespace cc_shadowplay {
                     tb_end_time.Text = TimeSpan.FromSeconds(player.end_time).ToString();
                 }
             }
+        }
+
+        public async void ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file) {
+            progbar_clip.Visible = true;
+            progbar_clip.Style = ProgressBarStyle.Marquee;
+            await Task.Run(() => {
+                using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
+                    p.StartInfo.FileName = ffmpeg;
+                    p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
+                    Console.WriteLine(p.StartInfo.Arguments);
+                    p.StartInfo.UseShellExecute = false;
+                    //p.StartInfo.CreateNoWindow = true;
+                    p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+                    p.Start();
+
+                    p.WaitForExit();
+                }
+            });
+
+            // 音を流す
+            Tools.PlaySound();
+
+            label_process_fin_clip.Visible = true;
+            progbar_clip.Style = ProgressBarStyle.Blocks;
         }
 
         /* 結合 */
@@ -192,7 +206,7 @@ namespace cc_shadowplay {
 
             // リストボックスに追加
             listbox_concat.Items.Add(file_name); Path.GetExtension(file_name);
-            label_process_fin.Visible = false;
+            label_process_fin_comb.Visible = false;
         }
 
         private void listbox_concat_del_Click(object sender, EventArgs e) {
@@ -236,7 +250,8 @@ namespace cc_shadowplay {
         }
 
         private void btn_concat_process_Click(object sender, EventArgs e) {
-            label_process_fin.Visible = false;
+            label_process_fin_comb.Visible = false;
+            progbar_comb.Visible = false;
 
             string ffmpeg = Path.Combine(
                 System.IO.Directory.GetCurrentDirectory(),
@@ -284,20 +299,30 @@ namespace cc_shadowplay {
             }
             
             // ffmpeg
-            using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
-                p.StartInfo.FileName = ffmpeg;
-                p.StartInfo.Arguments = String.Format("-y -f concat -safe 0 -i {0} -c copy {1}", input_txt, after_file);
-                p.StartInfo.UseShellExecute = false;
-                p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
-                p.Start();
+            ProcessCombineAsync(ffmpeg, input_txt, after_file);
+            
+        }
 
-                p.WaitForExit();
-            };
+        public async void ProcessCombineAsync(string ffmpeg, string input_txt, string after_file) {
+            progbar_comb.Visible = true;
+            progbar_comb.Style = ProgressBarStyle.Marquee;
+            await Task.Run(() => {
+                using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
+                    p.StartInfo.FileName = ffmpeg;
+                    p.StartInfo.Arguments = String.Format("-y -f concat -safe 0 -i {0} -c copy {1}", input_txt, after_file);
+                    p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+                    p.Start();
+
+                    p.WaitForExit();
+                };
+            });
 
             // 音を流す
             Tools.PlaySound();
 
-            label_process_fin.Visible = true;
+            label_process_fin_comb.Visible = true;
+            progbar_comb.Style = ProgressBarStyle.Blocks;
 
             File.Delete(input_txt);
         }
