@@ -52,12 +52,7 @@ namespace cc_shadowplay {
         }
 
         private void btn_ok_Click(object sender, EventArgs e) {
-            if (_end_time <= _start_time) {
-                label_warn.Visible = true;
-            }
-            else {
-                this.Close();
-            }
+            this.Close();
         }
 
         private void btn_start_set_Click(object sender, EventArgs e) {

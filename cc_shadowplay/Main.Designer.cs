@@ -36,18 +36,27 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tb_start_time = new System.Windows.Forms.TextBox();
-            this.label_process_fin = new System.Windows.Forms.Label();
+            this.label_process_fin_clip = new System.Windows.Forms.Label();
             this.btn_preview = new System.Windows.Forms.Button();
             this.tabctrl = new System.Windows.Forms.TabControl();
             this.tabpg_split = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.progbar_clip = new System.Windows.Forms.ProgressBar();
+            this.panel_size = new System.Windows.Forms.Panel();
+            this.tb_size_custom = new cc_shadowplay.Main.TextBoxPlaceHolder();
+            this.rb_custom = new System.Windows.Forms.RadioButton();
+            this.rb_1280x720 = new System.Windows.Forms.RadioButton();
+            this.rb_1920x1080 = new System.Windows.Forms.RadioButton();
+            this.rb_original = new System.Windows.Forms.RadioButton();
             this.tabpg_combine = new System.Windows.Forms.TabPage();
+            this.progbar_comb = new System.Windows.Forms.ProgressBar();
+            this.label_process_comb = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.listbox_concat_add = new System.Windows.Forms.Button();
             this.listbox_concat_down = new System.Windows.Forms.Button();
             this.listbox_concat_up = new System.Windows.Forms.Button();
             this.listbox_concat_del = new System.Windows.Forms.Button();
             this.listbox_concat = new System.Windows.Forms.ListBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.tb_concat_savedir = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -56,6 +65,7 @@
             this.btn_concat_process = new System.Windows.Forms.Button();
             this.tabctrl.SuspendLayout();
             this.tabpg_split.SuspendLayout();
+            this.panel_size.SuspendLayout();
             this.tabpg_combine.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -104,9 +114,9 @@
             // 
             // btn_process
             // 
-            this.btn_process.Location = new System.Drawing.Point(409, 184);
+            this.btn_process.Location = new System.Drawing.Point(409, 192);
             this.btn_process.Name = "btn_process";
-            this.btn_process.Size = new System.Drawing.Size(154, 45);
+            this.btn_process.Size = new System.Drawing.Size(154, 71);
             this.btn_process.TabIndex = 8;
             this.btn_process.Text = "開始";
             this.btn_process.UseVisualStyleBackColor = true;
@@ -173,17 +183,17 @@
             this.tb_start_time.TabIndex = 13;
             this.tb_start_time.Text = "00:00:00";
             // 
-            // label_process_fin
+            // label_process_fin_clip
             // 
-            this.label_process_fin.AutoSize = true;
-            this.label_process_fin.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_process_fin.ForeColor = System.Drawing.Color.Blue;
-            this.label_process_fin.Location = new System.Drawing.Point(336, 214);
-            this.label_process_fin.Name = "label_process_fin";
-            this.label_process_fin.Size = new System.Drawing.Size(67, 15);
-            this.label_process_fin.TabIndex = 16;
-            this.label_process_fin.Text = "処理完了";
-            this.label_process_fin.Visible = false;
+            this.label_process_fin_clip.AutoSize = true;
+            this.label_process_fin_clip.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_process_fin_clip.ForeColor = System.Drawing.Color.Blue;
+            this.label_process_fin_clip.Location = new System.Drawing.Point(205, 248);
+            this.label_process_fin_clip.Name = "label_process_fin_clip";
+            this.label_process_fin_clip.Size = new System.Drawing.Size(67, 15);
+            this.label_process_fin_clip.TabIndex = 16;
+            this.label_process_fin_clip.Text = "処理完了";
+            this.label_process_fin_clip.Visible = false;
             // 
             // btn_preview
             // 
@@ -202,15 +212,17 @@
             this.tabctrl.Location = new System.Drawing.Point(12, 12);
             this.tabctrl.Name = "tabctrl";
             this.tabctrl.SelectedIndex = 0;
-            this.tabctrl.Size = new System.Drawing.Size(593, 265);
+            this.tabctrl.Size = new System.Drawing.Size(593, 304);
             this.tabctrl.TabIndex = 18;
             // 
             // tabpg_split
             // 
             this.tabpg_split.AllowDrop = true;
+            this.tabpg_split.Controls.Add(this.label7);
+            this.tabpg_split.Controls.Add(this.progbar_clip);
             this.tabpg_split.Controls.Add(this.label1);
             this.tabpg_split.Controls.Add(this.btn_preview);
-            this.tabpg_split.Controls.Add(this.label_process_fin);
+            this.tabpg_split.Controls.Add(this.label_process_fin_clip);
             this.tabpg_split.Controls.Add(this.tb_before_path);
             this.tabpg_split.Controls.Add(this.tb_start_time);
             this.tabpg_split.Controls.Add(this.tb_after_dir);
@@ -223,10 +235,11 @@
             this.tabpg_split.Controls.Add(this.tb_end_time);
             this.tabpg_split.Controls.Add(this.label3);
             this.tabpg_split.Controls.Add(this.btn_process);
+            this.tabpg_split.Controls.Add(this.panel_size);
             this.tabpg_split.Location = new System.Drawing.Point(4, 22);
             this.tabpg_split.Name = "tabpg_split";
             this.tabpg_split.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpg_split.Size = new System.Drawing.Size(585, 239);
+            this.tabpg_split.Size = new System.Drawing.Size(585, 278);
             this.tabpg_split.TabIndex = 0;
             this.tabpg_split.Text = "動画分割";
             this.tabpg_split.UseVisualStyleBackColor = true;
@@ -234,16 +247,100 @@
             this.tabpg_split.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabpg_DragEnter);
             this.tabpg_split.DragLeave += new System.EventHandler(this.tabpg_DragLeave);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(81, 197);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(41, 12);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "解像度";
+            // 
+            // progbar_clip
+            // 
+            this.progbar_clip.Location = new System.Drawing.Point(278, 248);
+            this.progbar_clip.Name = "progbar_clip";
+            this.progbar_clip.Size = new System.Drawing.Size(125, 15);
+            this.progbar_clip.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progbar_clip.TabIndex = 18;
+            this.progbar_clip.Value = 100;
+            this.progbar_clip.Visible = false;
+            // 
+            // panel_size
+            // 
+            this.panel_size.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel_size.Controls.Add(this.tb_size_custom);
+            this.panel_size.Controls.Add(this.rb_custom);
+            this.panel_size.Controls.Add(this.rb_1280x720);
+            this.panel_size.Controls.Add(this.rb_1920x1080);
+            this.panel_size.Controls.Add(this.rb_original);
+            this.panel_size.Location = new System.Drawing.Point(128, 192);
+            this.panel_size.Name = "panel_size";
+            this.panel_size.Size = new System.Drawing.Size(275, 50);
+            this.panel_size.TabIndex = 21;
+            // 
+            // tb_size_custom
+            // 
+            this.tb_size_custom.Enabled = false;
+            this.tb_size_custom.Location = new System.Drawing.Point(189, 26);
+            this.tb_size_custom.Name = "tb_size_custom";
+            this.tb_size_custom.Placeholder = "1920x1080";
+            this.tb_size_custom.Size = new System.Drawing.Size(74, 19);
+            this.tb_size_custom.TabIndex = 4;
+            // 
+            // rb_custom
+            // 
+            this.rb_custom.AutoSize = true;
+            this.rb_custom.Location = new System.Drawing.Point(169, 29);
+            this.rb_custom.Name = "rb_custom";
+            this.rb_custom.Size = new System.Drawing.Size(14, 13);
+            this.rb_custom.TabIndex = 3;
+            this.rb_custom.UseVisualStyleBackColor = true;
+            this.rb_custom.CheckedChanged += new System.EventHandler(this.rb_custom_CheckedChanged);
+            // 
+            // rb_1280x720
+            // 
+            this.rb_1280x720.AutoSize = true;
+            this.rb_1280x720.Location = new System.Drawing.Point(92, 27);
+            this.rb_1280x720.Name = "rb_1280x720";
+            this.rb_1280x720.Size = new System.Drawing.Size(71, 16);
+            this.rb_1280x720.TabIndex = 2;
+            this.rb_1280x720.Text = "1280x720";
+            this.rb_1280x720.UseVisualStyleBackColor = true;
+            // 
+            // rb_1920x1080
+            // 
+            this.rb_1920x1080.AutoSize = true;
+            this.rb_1920x1080.Location = new System.Drawing.Point(9, 27);
+            this.rb_1920x1080.Name = "rb_1920x1080";
+            this.rb_1920x1080.Size = new System.Drawing.Size(77, 16);
+            this.rb_1920x1080.TabIndex = 1;
+            this.rb_1920x1080.Text = "1920x1080";
+            this.rb_1920x1080.UseVisualStyleBackColor = true;
+            // 
+            // rb_original
+            // 
+            this.rb_original.AutoSize = true;
+            this.rb_original.Checked = true;
+            this.rb_original.Location = new System.Drawing.Point(9, 5);
+            this.rb_original.Name = "rb_original";
+            this.rb_original.Size = new System.Drawing.Size(138, 16);
+            this.rb_original.TabIndex = 0;
+            this.rb_original.TabStop = true;
+            this.rb_original.Text = "Original（エンコードなし）";
+            this.rb_original.UseVisualStyleBackColor = true;
+            // 
             // tabpg_combine
             // 
             this.tabpg_combine.AllowDrop = true;
+            this.tabpg_combine.Controls.Add(this.progbar_comb);
+            this.tabpg_combine.Controls.Add(this.label_process_comb);
             this.tabpg_combine.Controls.Add(this.label6);
             this.tabpg_combine.Controls.Add(this.listbox_concat_add);
             this.tabpg_combine.Controls.Add(this.listbox_concat_down);
             this.tabpg_combine.Controls.Add(this.listbox_concat_up);
             this.tabpg_combine.Controls.Add(this.listbox_concat_del);
             this.tabpg_combine.Controls.Add(this.listbox_concat);
-            this.tabpg_combine.Controls.Add(this.label7);
             this.tabpg_combine.Controls.Add(this.tb_concat_savedir);
             this.tabpg_combine.Controls.Add(this.label8);
             this.tabpg_combine.Controls.Add(this.label9);
@@ -253,13 +350,35 @@
             this.tabpg_combine.Location = new System.Drawing.Point(4, 22);
             this.tabpg_combine.Name = "tabpg_combine";
             this.tabpg_combine.Padding = new System.Windows.Forms.Padding(3);
-            this.tabpg_combine.Size = new System.Drawing.Size(585, 239);
+            this.tabpg_combine.Size = new System.Drawing.Size(585, 278);
             this.tabpg_combine.TabIndex = 1;
             this.tabpg_combine.Text = "動画結合";
             this.tabpg_combine.UseVisualStyleBackColor = true;
             this.tabpg_combine.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabpg_DragDrop);
             this.tabpg_combine.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabpg_DragEnter);
             this.tabpg_combine.DragLeave += new System.EventHandler(this.tabpg_DragLeave);
+            // 
+            // progbar_comb
+            // 
+            this.progbar_comb.Location = new System.Drawing.Point(278, 248);
+            this.progbar_comb.Name = "progbar_comb";
+            this.progbar_comb.Size = new System.Drawing.Size(125, 15);
+            this.progbar_comb.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progbar_comb.TabIndex = 42;
+            this.progbar_comb.Value = 100;
+            this.progbar_comb.Visible = false;
+            // 
+            // label_process_comb
+            // 
+            this.label_process_comb.AutoSize = true;
+            this.label_process_comb.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_process_comb.ForeColor = System.Drawing.Color.Blue;
+            this.label_process_comb.Location = new System.Drawing.Point(205, 248);
+            this.label_process_comb.Name = "label_process_comb";
+            this.label_process_comb.Size = new System.Drawing.Size(67, 15);
+            this.label_process_comb.TabIndex = 41;
+            this.label_process_comb.Text = "処理完了";
+            this.label_process_comb.Visible = false;
             // 
             // label6
             // 
@@ -319,18 +438,6 @@
             this.listbox_concat.Size = new System.Drawing.Size(461, 88);
             this.listbox_concat.TabIndex = 33;
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label7.ForeColor = System.Drawing.Color.Blue;
-            this.label7.Location = new System.Drawing.Point(336, 214);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 15);
-            this.label7.TabIndex = 32;
-            this.label7.Text = "処理完了";
-            this.label7.Visible = false;
-            // 
             // tb_concat_savedir
             // 
             this.tb_concat_savedir.Location = new System.Drawing.Point(180, 120);
@@ -362,7 +469,7 @@
             this.tb_concat_filename.Name = "tb_concat_filename";
             this.tb_concat_filename.Size = new System.Drawing.Size(302, 19);
             this.tb_concat_filename.TabIndex = 28;
-            this.tb_concat_filename.Text = "output.mp4";
+            this.tb_concat_filename.Text = "combined_movie.mp4";
             // 
             // btn_concat_ref
             // 
@@ -376,9 +483,9 @@
             // 
             // btn_concat_process
             // 
-            this.btn_concat_process.Location = new System.Drawing.Point(409, 184);
+            this.btn_concat_process.Location = new System.Drawing.Point(409, 192);
             this.btn_concat_process.Name = "btn_concat_process";
-            this.btn_concat_process.Size = new System.Drawing.Size(154, 45);
+            this.btn_concat_process.Size = new System.Drawing.Size(154, 71);
             this.btn_concat_process.TabIndex = 25;
             this.btn_concat_process.Text = "開始";
             this.btn_concat_process.UseVisualStyleBackColor = true;
@@ -389,7 +496,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(617, 288);
+            this.ClientSize = new System.Drawing.Size(617, 328);
             this.Controls.Add(this.tabctrl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Main";
@@ -399,6 +506,8 @@
             this.tabctrl.ResumeLayout(false);
             this.tabpg_split.ResumeLayout(false);
             this.tabpg_split.PerformLayout();
+            this.panel_size.ResumeLayout(false);
+            this.panel_size.PerformLayout();
             this.tabpg_combine.ResumeLayout(false);
             this.tabpg_combine.PerformLayout();
             this.ResumeLayout(false);
@@ -420,12 +529,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tb_start_time;
-        private System.Windows.Forms.Label label_process_fin;
+        private System.Windows.Forms.Label label_process_fin_clip;
         private System.Windows.Forms.Button btn_preview;
         private System.Windows.Forms.TabControl tabctrl;
         private System.Windows.Forms.TabPage tabpg_split;
         private System.Windows.Forms.TabPage tabpg_combine;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox tb_concat_savedir;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
@@ -438,6 +546,16 @@
         private System.Windows.Forms.ListBox listbox_concat;
         private System.Windows.Forms.Button listbox_concat_add;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ProgressBar progbar_clip;
+        private System.Windows.Forms.ProgressBar progbar_comb;
+        private System.Windows.Forms.Label label_process_comb;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel panel_size;
+        private System.Windows.Forms.RadioButton rb_1920x1080;
+        private System.Windows.Forms.RadioButton rb_original;
+        private System.Windows.Forms.RadioButton rb_custom;
+        private System.Windows.Forms.RadioButton rb_1280x720;
+        private TextBoxPlaceHolder tb_size_custom;
     }
 }
 
