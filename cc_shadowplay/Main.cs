@@ -199,8 +199,6 @@ namespace cc_shadowplay {
 
         private void btn_abort_Click(object sender, EventArgs e) {
             tokenSource.Cancel();
-            label_process_fin_clip.Text = "中止";
-            label_process_fin_clip.ForeColor = Color.Red;
         }
 
         private void btn_preview_Click(object sender, EventArgs e) {
@@ -281,6 +279,14 @@ namespace cc_shadowplay {
             // 音を流す
             Tools.PlaySound();
 
+            if (tokenSource.IsCancellationRequested) {
+                label_process_fin_clip.Text = "中止";
+                label_process_fin_clip.ForeColor = Color.Red;
+            }
+            else {
+                label_process_fin_clip.Text = "処理完了";
+                label_process_fin_clip.ForeColor = Color.Blue;
+            }
             label_process_fin_clip.Visible = true;
             progbar_clip.Style = ProgressBarStyle.Blocks;
 
