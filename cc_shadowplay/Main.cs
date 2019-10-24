@@ -374,6 +374,7 @@ namespace cc_shadowplay {
         }
 
         private void btn_concat_process_Click(object sender, EventArgs e) {
+            label_process_comb.Text = "";
             progbar_comb.Visible = false;
 
             string ffmpeg = Path.Combine(
@@ -390,7 +391,7 @@ namespace cc_shadowplay {
             }
 
             // 変換後動画
-            if (!Directory.Exists(tb_concat_savedir.Text)) Tools.ShowError("保存先が見つかりません");
+            if (!Directory.Exists(tb_concat_savedir.Text)) { Tools.ShowError("保存先が見つかりません"); return; }
             string after_file = Path.Combine(tb_concat_savedir.Text, tb_concat_filename.Text);
             try {
                 Path.Combine(after_file);
@@ -428,11 +429,9 @@ namespace cc_shadowplay {
         }
 
         public async void ProcessCombineAsync(string ffmpeg, string input_txt, string after_file) {
-            // disable all control
-            foreach(Control c in tabpg_combine.Controls){
-                if (c.Equals(btn_concat_process)) {
-                    btn_concat_process.Text = "中止";
-                }
+            // disable all controls
+            foreach (Control c in GetAllWebControl(tabctrl)) {
+                c.Enabled = false;
             }
 
             progbar_comb.Visible = true;
@@ -458,11 +457,9 @@ namespace cc_shadowplay {
 
             File.Delete(input_txt);
 
-            // enable all control
-            foreach (Control c in tabpg_combine.Controls) {
-                if (c.Equals(btn_concat_process)) {
-                    btn_concat_process.Text = "開始";
-                }
+            // enable all controls
+            foreach (Control c in GetAllWebControl(tabctrl)) {
+                c.Enabled = true;
             }
         }
 
