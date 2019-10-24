@@ -24,29 +24,16 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayer));
-            this.wmp = new AxWMPLib.AxWindowsMediaPlayer();
             this.btn_ok = new System.Windows.Forms.Button();
             this.label_start_time = new System.Windows.Forms.Label();
             this.label_end_time = new System.Windows.Forms.Label();
             this.btn_start_set = new System.Windows.Forms.Button();
             this.btn_end_start = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label_warn = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.wmp)).BeginInit();
+            this.wmp = new AxWMPLib.AxWindowsMediaPlayer();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wmp)).BeginInit();
             this.SuspendLayout();
-            // 
-            // wmp
-            // 
-            this.wmp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.wmp.Enabled = true;
-            this.wmp.Location = new System.Drawing.Point(0, 0);
-            this.wmp.Name = "wmp";
-            this.wmp.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("wmp.OcxState")));
-            this.wmp.Size = new System.Drawing.Size(640, 351);
-            this.wmp.TabIndex = 0;
             // 
             // btn_ok
             // 
@@ -107,7 +94,6 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.label_warn);
             this.panel1.Controls.Add(this.btn_ok);
             this.panel1.Controls.Add(this.btn_start_set);
             this.panel1.Controls.Add(this.label_end_time);
@@ -118,16 +104,17 @@
             this.panel1.Size = new System.Drawing.Size(616, 85);
             this.panel1.TabIndex = 18;
             // 
-            // label_warn
+            // wmp
             // 
-            this.label_warn.AutoSize = true;
-            this.label_warn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label_warn.Location = new System.Drawing.Point(409, 16);
-            this.label_warn.Name = "label_warn";
-            this.label_warn.Size = new System.Drawing.Size(194, 12);
-            this.label_warn.TabIndex = 18;
-            this.label_warn.Text = "始点 < 終点となるように設定してください";
-            this.label_warn.Visible = false;
+            this.wmp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.wmp.Enabled = true;
+            this.wmp.Location = new System.Drawing.Point(0, 0);
+            this.wmp.Name = "wmp";
+            this.wmp.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("wmp.OcxState")));
+            this.wmp.Size = new System.Drawing.Size(640, 351);
+            this.wmp.TabIndex = 0;
             // 
             // VideoPlayer
             // 
@@ -141,9 +128,9 @@
             this.Text = "VideoPlayer";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VideoPlayer_FormClosed);
             this.Load += new System.EventHandler(this.VideoPlayer_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.wmp)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wmp)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -157,7 +144,6 @@
         private System.Windows.Forms.Button btn_start_set;
         private System.Windows.Forms.Button btn_end_start;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label_warn;
 
 
     }

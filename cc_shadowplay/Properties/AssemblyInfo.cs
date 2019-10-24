@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("cc_shadowplay")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("@nop__jk17sai")]
+[assembly: AssemblyCompany("@Virtual_JK17sai")]
 [assembly: AssemblyProduct("cc_shadowplay")]
-[assembly: AssemblyCopyright("Copyright ©NOP 2016")]
+[assembly: AssemblyCopyright("Copyright ©NOP 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

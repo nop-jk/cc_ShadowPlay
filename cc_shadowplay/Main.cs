@@ -19,6 +19,29 @@ namespace cc_shadowplay {
             InitializeComponent();
         }
 
+        // TextBoxにPlaceholderを実装
+        public class TextBoxPlaceHolder : TextBox {
+            private string _placeholder = string.Empty;
+            public string Placeholder {
+                get { return _placeholder; }
+                set {
+                    _placeholder = value;
+                    Invalidate();
+                }
+            }
+            protected override void WndProc(ref System.Windows.Forms.Message m) {
+                base.WndProc(ref m);
+                if (m.Msg == 15) {
+                    if (this.Enabled && !this.ReadOnly && !this.Focused && (_placeholder != null) && (_placeholder.Length > 0) && (this.TextLength == 0)) {
+                        using (var g = this.CreateGraphics()) {
+                            g.FillRectangle(new System.Drawing.SolidBrush(this.BackColor), this.ClientRectangle);
+                            var placeholderTextColor = System.Drawing.Color.FromArgb((this.ForeColor.A >> 1 + this.BackColor.A >> 1), (this.ForeColor.R >> 1 + this.BackColor.R >> 1), ((this.ForeColor.G >> 1 + this.BackColor.G) >> 1), (this.ForeColor.B >> 1 + this.BackColor.B >> 1));
+                            g.DrawString(_placeholder, this.Font, new System.Drawing.SolidBrush(placeholderTextColor), 1, 1);
+                        }
+                    }
+                }
+            }
+        }
         /* 分割 */
         private void btn_before_path_Click(object sender, EventArgs e) {
             string file_name = "";
@@ -140,6 +163,10 @@ namespace cc_shadowplay {
 
         }
 
+        private void btn_abort_Click(object sender, EventArgs e) {
+            Console.WriteLine(1);
+        }
+
         private void btn_preview_Click(object sender, EventArgs e) {
             using (VideoPlayer player = new VideoPlayer()) {
                 player.video_file = tb_before_path.Text;
@@ -150,16 +177,27 @@ namespace cc_shadowplay {
             }
         }
 
-        public async void ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file) {
+        public async Task<bool> ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file) {
+            // disable all control
+            foreach (Control c in tabpg_combine.Controls) {
+                if (c.Equals(btn_concat_process)) {
+                    btn_process.Text = "中止";
+                    btn_process.Click -= new System.EventHandler(btn_process_Click);
+                    btn_process.Click += new System.EventHandler(btn_abort_Click);
+                }
+                else {
+                    c.Enabled = false;
+                }
+            }
+
             progbar_clip.Visible = true;
             progbar_clip.Style = ProgressBarStyle.Marquee;
             await Task.Run(() => {
                 using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
                     p.StartInfo.FileName = ffmpeg;
                     p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
-                    Console.WriteLine(p.StartInfo.Arguments);
                     p.StartInfo.UseShellExecute = false;
-                    //p.StartInfo.CreateNoWindow = true;
+                    p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
                     p.Start();
 
@@ -172,6 +210,18 @@ namespace cc_shadowplay {
 
             label_process_fin_clip.Visible = true;
             progbar_clip.Style = ProgressBarStyle.Blocks;
+
+            // enable all control
+            foreach (Control c in tabpg_combine.Controls) {
+                if (c.Equals(btn_concat_process)) {
+                    btn_process.Text = "開始";
+                    btn_process.Click += new System.EventHandler(btn_process_Click);
+                }
+                else {
+                    c.Enabled = true;
+                }
+            }
+            return true;
         }
 
         /* 結合 */
@@ -206,7 +256,7 @@ namespace cc_shadowplay {
 
             // リストボックスに追加
             listbox_concat.Items.Add(file_name); Path.GetExtension(file_name);
-            label_process_fin_comb.Visible = false;
+            label_process_comb.Visible = false;
         }
 
         private void listbox_concat_del_Click(object sender, EventArgs e) {
@@ -250,7 +300,6 @@ namespace cc_shadowplay {
         }
 
         private void btn_concat_process_Click(object sender, EventArgs e) {
-            label_process_fin_comb.Visible = false;
             progbar_comb.Visible = false;
 
             string ffmpeg = Path.Combine(
@@ -299,11 +348,19 @@ namespace cc_shadowplay {
             }
             
             // ffmpeg
+            label_process_comb.Text = "処理中";
             ProcessCombineAsync(ffmpeg, input_txt, after_file);
             
         }
 
         public async void ProcessCombineAsync(string ffmpeg, string input_txt, string after_file) {
+            // disable all control
+            foreach(Control c in tabpg_combine.Controls){
+                if (c.Equals(btn_concat_process)) {
+                    btn_concat_process.Text = "中止";
+                }
+            }
+
             progbar_comb.Visible = true;
             progbar_comb.Style = ProgressBarStyle.Marquee;
             await Task.Run(() => {
@@ -311,6 +368,7 @@ namespace cc_shadowplay {
                     p.StartInfo.FileName = ffmpeg;
                     p.StartInfo.Arguments = String.Format("-y -f concat -safe 0 -i {0} -c copy {1}", input_txt, after_file);
                     p.StartInfo.UseShellExecute = false;
+                    p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
                     p.Start();
 
@@ -321,10 +379,17 @@ namespace cc_shadowplay {
             // 音を流す
             Tools.PlaySound();
 
-            label_process_fin_comb.Visible = true;
+            label_process_comb.Visible = true;
             progbar_comb.Style = ProgressBarStyle.Blocks;
 
             File.Delete(input_txt);
+
+            // enable all control
+            foreach (Control c in tabpg_combine.Controls) {
+                if (c.Equals(btn_concat_process)) {
+                    btn_concat_process.Text = "開始";
+                }
+            }
         }
 
         /* ドラッグドロップ処理 */
@@ -404,6 +469,15 @@ namespace cc_shadowplay {
                 "NameSpace",
                 System.Reflection.BindingFlags.InvokeMethod, null, shell, new object[] { folder }
             );
+        }
+
+        private void rb_custom_CheckedChanged(object sender, EventArgs e) {
+            if (rb_custom.Checked) {
+                tb_size_custom.Enabled = true;
+            }
+            else {
+                tb_size_custom.Enabled = false;
+            }
         }
 
     }
