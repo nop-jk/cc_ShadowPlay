@@ -49,6 +49,7 @@ NLC members
 
 # License
 GPL: http://www.gnu.org/licenses/gpl.html
+ffmpeg: https://ffmpeg.org/
 
 # 履歴
 * 2019/10/24 Release v1.1
