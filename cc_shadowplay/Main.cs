@@ -11,6 +11,7 @@ using System.IO;
 using Shell32;
 using System.Configuration;
 using System.Reflection;
+using System.Threading;
 
 
 namespace cc_shadowplay {
@@ -18,6 +19,9 @@ namespace cc_shadowplay {
         public Main() {
             InitializeComponent();
         }
+
+        // for ffmpeg process
+        CancellationTokenSource tokenSource;
 
         // TextBoxにPlaceholderを実装
         public class TextBoxPlaceHolder : TextBox {
@@ -191,12 +195,12 @@ namespace cc_shadowplay {
             // ffmpeg
             // ffmpeg -ss %3 -i %1 -t %40 -acodec copy -vcodec copy %2
             this.ProcessClipAsync(ffmpeg, start_time, before_file, cut_time_sec, after_file, resolution);
-
-
         }
 
         private void btn_abort_Click(object sender, EventArgs e) {
-            Console.WriteLine(1);
+            tokenSource.Cancel();
+            label_process_fin_clip.Text = "中止";
+            label_process_fin_clip.ForeColor = Color.Red;
         }
 
         private void btn_preview_Click(object sender, EventArgs e) {
@@ -224,6 +228,9 @@ namespace cc_shadowplay {
             return controls;
         }
         public async Task<bool> ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file, string resolution) {
+            // create a cancel token
+            tokenSource = new CancellationTokenSource();
+
             // disable all controls
             foreach (Control c in GetAllWebControl(tabctrl)) {
                 if (c.Equals(tabctrl) || c.Equals(tabpg_split)) {
@@ -243,8 +250,11 @@ namespace cc_shadowplay {
 
             progbar_clip.Visible = true;
             progbar_clip.Style = ProgressBarStyle.Marquee;
+
+
             await Task.Run(() => {
                 using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
+
                     p.StartInfo.FileName = ffmpeg;
                     if (resolution == "-1:-1") {
                         p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
@@ -257,7 +267,14 @@ namespace cc_shadowplay {
                     p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
                     p.Start();
 
-                    p.WaitForExit();
+                    // p.WaitForExit();
+                    while (!p.HasExited) {
+                        if (tokenSource.IsCancellationRequested) {
+                            // Taskのキャンセル処理
+                            p.Kill();
+                        }
+                        Task.Delay(100);
+                    }
                 }
             });
 

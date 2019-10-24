@@ -469,7 +469,7 @@
             this.tb_concat_filename.Name = "tb_concat_filename";
             this.tb_concat_filename.Size = new System.Drawing.Size(302, 19);
             this.tb_concat_filename.TabIndex = 28;
-            this.tb_concat_filename.Text = "output.mp4";
+            this.tb_concat_filename.Text = "combined_movie.mp4";
             // 
             // btn_concat_ref
             // 
