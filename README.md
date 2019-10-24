@@ -36,7 +36,7 @@ ShadowPlayの動画を想定していますが他の形式でも大丈夫かも�
 ### その他
 実行ファイルのディレクトリに `./finish.wav` という名前で音楽ファイルを置くと終了時に鳴ります。
 
-## Author
+# Author
 NOP (@nop__jk17sai)
 
 # Thanks
