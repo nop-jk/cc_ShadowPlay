@@ -42,7 +42,7 @@
             this.tabpg_split = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
             this.progbar_clip = new System.Windows.Forms.ProgressBar();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel_size = new System.Windows.Forms.Panel();
             this.tb_size_custom = new cc_shadowplay.Main.TextBoxPlaceHolder();
             this.rb_custom = new System.Windows.Forms.RadioButton();
             this.rb_1280x720 = new System.Windows.Forms.RadioButton();
@@ -65,7 +65,7 @@
             this.btn_concat_process = new System.Windows.Forms.Button();
             this.tabctrl.SuspendLayout();
             this.tabpg_split.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panel_size.SuspendLayout();
             this.tabpg_combine.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -235,7 +235,7 @@
             this.tabpg_split.Controls.Add(this.tb_end_time);
             this.tabpg_split.Controls.Add(this.label3);
             this.tabpg_split.Controls.Add(this.btn_process);
-            this.tabpg_split.Controls.Add(this.panel1);
+            this.tabpg_split.Controls.Add(this.panel_size);
             this.tabpg_split.Location = new System.Drawing.Point(4, 22);
             this.tabpg_split.Name = "tabpg_split";
             this.tabpg_split.Padding = new System.Windows.Forms.Padding(3);
@@ -266,18 +266,18 @@
             this.progbar_clip.Value = 100;
             this.progbar_clip.Visible = false;
             // 
-            // panel1
+            // panel_size
             // 
-            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel1.Controls.Add(this.tb_size_custom);
-            this.panel1.Controls.Add(this.rb_custom);
-            this.panel1.Controls.Add(this.rb_1280x720);
-            this.panel1.Controls.Add(this.rb_1920x1080);
-            this.panel1.Controls.Add(this.rb_original);
-            this.panel1.Location = new System.Drawing.Point(128, 192);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(275, 50);
-            this.panel1.TabIndex = 21;
+            this.panel_size.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel_size.Controls.Add(this.tb_size_custom);
+            this.panel_size.Controls.Add(this.rb_custom);
+            this.panel_size.Controls.Add(this.rb_1280x720);
+            this.panel_size.Controls.Add(this.rb_1920x1080);
+            this.panel_size.Controls.Add(this.rb_original);
+            this.panel_size.Location = new System.Drawing.Point(128, 192);
+            this.panel_size.Name = "panel_size";
+            this.panel_size.Size = new System.Drawing.Size(275, 50);
+            this.panel_size.TabIndex = 21;
             // 
             // tb_size_custom
             // 
@@ -506,8 +506,8 @@
             this.tabctrl.ResumeLayout(false);
             this.tabpg_split.ResumeLayout(false);
             this.tabpg_split.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panel_size.ResumeLayout(false);
+            this.panel_size.PerformLayout();
             this.tabpg_combine.ResumeLayout(false);
             this.tabpg_combine.PerformLayout();
             this.ResumeLayout(false);
@@ -550,7 +550,7 @@
         private System.Windows.Forms.ProgressBar progbar_comb;
         private System.Windows.Forms.Label label_process_comb;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel_size;
         private System.Windows.Forms.RadioButton rb_1920x1080;
         private System.Windows.Forms.RadioButton rb_original;
         private System.Windows.Forms.RadioButton rb_custom;

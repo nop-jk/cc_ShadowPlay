@@ -156,9 +156,41 @@ namespace cc_shadowplay {
                 return;
             }
 
+            // エンコードサイズごとにmodeを変更
+            string resolution = "-1:-1";
+            if (rb_original.Checked) {
+                // original
+                resolution = "-1:-1";
+            }
+            else if (rb_1920x1080.Checked) {
+                // 1920x1080
+                resolution = "1920:-1";
+            }
+            else if (rb_1280x720.Checked) {
+                // 1280x720
+                resolution = "1280:-1";
+            }
+            else if (rb_custom.Checked) {
+                // custom
+                try {
+                    var s = tb_size_custom.Text.Split('x');
+                    int.Parse(s[0]);  // whether a height can be an integer
+                    int.Parse(s[1]);  // whether a width can be an integer
+                    resolution = String.Format("{0}:{1}", s[0], s[1]);
+                }
+                catch {
+                    Tools.ShowError("サイズの指定が不正です");
+                    return;
+                }
+            }
+            else {
+                Tools.ShowError("サイズの指定が不正です");
+                return;
+            }
+
             // ffmpeg
             // ffmpeg -ss %3 -i %1 -t %40 -acodec copy -vcodec copy %2
-            this.ProcessClipAsync(ffmpeg, start_time, before_file, cut_time_sec, after_file);
+            this.ProcessClipAsync(ffmpeg, start_time, before_file, cut_time_sec, after_file, resolution);
 
 
         }
@@ -177,13 +209,32 @@ namespace cc_shadowplay {
             }
         }
 
-        public async Task<bool> ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file) {
-            // disable all control
-            foreach (Control c in tabpg_combine.Controls) {
-                if (c.Equals(btn_concat_process)) {
+        // すべてのコントロールを再帰的に取得
+        public List<Control> GetAllWebControl(Control parent) {
+            var controls = new List<Control>();
+
+            foreach (Control child in parent.Controls) {
+                controls.AddRange(GetAllWebControl(child));
+            }
+
+            if (parent is Control) {
+                controls.Add((Control)parent);
+            }
+
+            return controls;
+        }
+        public async Task<bool> ProcessClipAsync(string ffmpeg, string start_time, string before_file, TimeSpan cut_time_sec, string after_file, string resolution) {
+            // disable all controls
+            foreach (Control c in GetAllWebControl(tabctrl)) {
+                if (c.Equals(tabctrl) || c.Equals(tabpg_split)) {
+                    // btn_processのparent controlであるtabctrlとtabpg_splitをdisabledにするとbtn_processまでdisabledとなるため対象外とする
+                    c.Enabled = true;
+                }
+                else if (c.Equals(btn_process)) {
                     btn_process.Text = "中止";
                     btn_process.Click -= new System.EventHandler(btn_process_Click);
                     btn_process.Click += new System.EventHandler(btn_abort_Click);
+                    c.Enabled = true;
                 }
                 else {
                     c.Enabled = false;
@@ -195,7 +246,12 @@ namespace cc_shadowplay {
             await Task.Run(() => {
                 using (System.Diagnostics.Process p = new System.Diagnostics.Process()) {
                     p.StartInfo.FileName = ffmpeg;
-                    p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
+                    if (resolution == "-1:-1") {
+                        p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -acodec copy -vcodec copy \"{3}\"", start_time, before_file, cut_time_sec.TotalSeconds, after_file);
+                    }
+                    else {
+                        p.StartInfo.Arguments = String.Format("-y -ss {0} -i \"{1}\" -t {2} -vf scale=\"{3}\" -acodec copy \"{4}\"", start_time, before_file, cut_time_sec.TotalSeconds, resolution, after_file);
+                    }
                     p.StartInfo.UseShellExecute = false;
                     p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -211,11 +267,12 @@ namespace cc_shadowplay {
             label_process_fin_clip.Visible = true;
             progbar_clip.Style = ProgressBarStyle.Blocks;
 
-            // enable all control
-            foreach (Control c in tabpg_combine.Controls) {
-                if (c.Equals(btn_concat_process)) {
+            // enable all controls
+            foreach (Control c in GetAllWebControl(tabctrl)) {
+                if (c.Equals(btn_process)) {
                     btn_process.Text = "開始";
                     btn_process.Click += new System.EventHandler(btn_process_Click);
+                    btn_process.Click -= new System.EventHandler(btn_abort_Click);
                 }
                 else {
                     c.Enabled = true;
